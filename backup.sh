@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# 전달된 인자를 변수에 할당
+source_file_path="$1"
+backup_dir_path="$2"
+
+backuped_date="-$(date +"%Y-%m-%d-%H:%M:%S")"
+
+# 두개가 전부 할당이 안되었으면 입/출력을 받는다.
+if [ ! -z "$source_file" ] || [ ! -z "$backup_dir"]; then
+	read -p "Input backup directory path: " source_file_path
+	read -p "Input source directory path: " backup_dir_path
+fi
+
+# 소스 디렉토리가 없으면 가이드 메시지를 출력한다.
+if [ ! -d "$source_file_path" ] && [ ! -f "$source_file_path" ]; then
+	echo "this is guide"
+	exit 1
+fi
+
+# 백업할 디렉토리가 없으면 생성한다.
+if [ ! -d "$backup_dir_path" ]; then
+	mkdir "$backup_dir_path"
+fi
+
+# 백업을 진행한다.
+file_name=$(basename "$source_file_path")
+cp -r "$source_file_path" "$backup_dir_path/$file_name$backuped_date"
+
+echo "Backup completed!"
+
